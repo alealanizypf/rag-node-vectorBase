@@ -10,23 +10,28 @@ Implementación base de **RAG 100% gratuita** en Node.js:
 ---
 ## Requisitos
 - Node.js 18+
-- Docker (para Qdrant)
-- (Opcional) [Ollama](https://ollama.com) con un modelo local (por ejemplo `llama3`)
+- Docker y Docker Compose
 
 ---
 ## Levantar infraestructura
-1) **Qdrant**
-```bash
-docker run -p 6333:6333 qdrant/qdrant
-```
-Qdrant quedará en http://localhost:6333
+Usa Docker Compose para levantar Qdrant y Ollama automáticamente:
 
-2) **Ollama** (opcional, para respuestas con LLM)
 ```bash
-# Instala Ollama desde https://ollama.com/download
-ollama pull llama3
-ollama serve  # (si no se inicia automáticamente)
+docker-compose up -d
 ```
+
+Esto iniciará:
+- **Qdrant**: http://localhost:6333
+- **Ollama**: http://localhost:11434
+
+### Descargar modelo en Ollama
+Una vez que el contenedor esté corriendo, descarga el modelo `llama3`:
+
+```bash
+docker exec ollama-llm ollama pull llama3
+```
+
+(Reemplaza `ollama-llm` con el nombre del contenedor si es distinto)
 
 ---
 ## Configuración del proyecto
@@ -37,11 +42,11 @@ cp .env.example .env
 npm install
 ```
 
-Variables clave en `.env`:
-- `QDRANT_URL` (por defecto `http://localhost:6333`)
+Variables clave en `.env` (se usan las URLs internas de Docker Compose):
+- `QDRANT_URL` (por defecto `http://qdrant:6333` o `http://localhost:6333`)
 - `QDRANT_COLLECTION` (por defecto `documentos`)
 - `EMBEDDING_MODEL` (por defecto `Xenova/bge-small-en-v1.5`)
-- `OLLAMA_HOST` (por defecto `http://localhost:11434`)
+- `OLLAMA_HOST` (por defecto `http://ollama:11434` o `http://localhost:11434`)
 - `OLLAMA_MODEL` (por defecto `llama3`)
 - `CHUNK_SIZE` / `CHUNK_OVERLAP` para trocear texto
 

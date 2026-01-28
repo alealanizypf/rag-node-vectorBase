@@ -12,7 +12,7 @@ import { config } from '../config.js';
 
 const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
-
+const EMBEDDING_SIZE = await embeddingSize();
 router.post('/', upload.single('file'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'Falta el archivo PDF' });
   const docId = req.body.docId || req.file.originalname;
@@ -22,11 +22,10 @@ router.post('/', upload.single('file'), async (req, res) => {
     const text = await extractTextFromPDF(filePath);
     if (!text.trim()) throw new Error('No se pudo extraer texto del PDF');
 
-    const chunks = splitText(text);
+    const chunks = await splitText(text);
     const vectors = await embedTexts(chunks);
 
-    const size = await embeddingSize();
-    await ensureCollection(size);
+    await ensureCollection(EMBEDDING_SIZE);
 
     const payloads = chunks.map((c, i) => ({
       docId,

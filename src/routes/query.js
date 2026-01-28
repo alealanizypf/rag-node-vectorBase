@@ -14,9 +14,7 @@
             const [qVec] = await embedTexts([query]);
             const results = await search(qVec, topK);
 
-            const context = results.map((r, i) => `[#${i+1} | score=${r.score.toFixed(3)}] ${r.payload.text}`).join('
----
-');
+            const context = results.map((r, i) => `[#${i+1} | score=${r.score.toFixed(3)}] ${r.payload.text}`).join('');
 
             // Si hay Ollama, generamos respuesta; si no, devolvemos solo el contexto
             let answer = null;

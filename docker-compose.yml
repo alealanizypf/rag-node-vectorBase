@@ -4,11 +4,3 @@ services:
     ports:
       - "6333:6333"
     container_name: qdrant-vector-db
-
-  ollama:
-    image: ollama/ollama
-    ports:
-      - "11434:11434"
-    container_name: ollama-llm
-    stdin_open: true
-    tty: true

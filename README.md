@@ -65,12 +65,18 @@ npm run start
 ```
 API por defecto en: `http://localhost:3000`
 
+### Documentación Swagger
+La API incluye documentación interactiva con Swagger UI:
+- **URL**: `http://localhost:3000/api-docs`
+- Permite probar los endpoints directamente desde el navegador
+- Incluye esquemas detallados de request/response
+
 ### Endpoints
 1. **POST** `/ingest` (multipart/form-data)
    - Campo `file`: un PDF
    - Opcional `docId`: identificador del documento
    ```bash
-   curl -F "file=@/ruta/a/archivo.pdf" http://localhost:3000/ingest
+   curl.exe -X POST -F "file=@C:\Users\user1\Downloads\archivo.pdf" http://localhost:3000/ingest
    ```
 2. **POST** `/query`
    - JSON: `{ "query": "tu pregunta", "topK": 5 }`

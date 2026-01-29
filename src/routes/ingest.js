@@ -13,6 +13,65 @@ import { config } from '../config.js';
 const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
 const EMBEDDING_SIZE = await embeddingSize();
+/**
+ * @swagger
+ * /ingest:
+ *   post:
+ *     summary: Ingresa un archivo PDF para procesamiento RAG
+ *     description: Sube un archivo PDF, extrae el texto, lo divide en chunks y los almacena en la base de datos vectorial
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: Archivo PDF a procesar
+ *               docId:
+ *                 type: string
+ *                 description: ID opcional para el documento (usa el nombre del archivo si no se proporciona)
+ *             required:
+ *               - file
+ *     responses:
+ *       200:
+ *         description: PDF procesado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 ok:
+ *                   type: boolean
+ *                   example: true
+ *                 chunks:
+ *                   type: integer
+ *                   description: Número de chunks procesados
+ *                 collection:
+ *                   type: string
+ *                   description: Nombre de la colección en Qdrant
+ *       400:
+ *         description: Error de solicitud (falta archivo o no se puede extraer texto)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Falta el archivo PDF"
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ */
 router.post('/', upload.single('file'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'Falta el archivo PDF' });
   const docId = req.body.docId || req.file.originalname;

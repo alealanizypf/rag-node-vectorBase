@@ -4,6 +4,8 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import ingestRouter from './routes/ingest.js';
 import queryRouter from './routes/query.js';
+import { specs, swaggerUiOptions } from './swagger.js';
+import swaggerUi from 'swagger-ui-express';
 
 dotenv.config();
 
@@ -12,8 +14,12 @@ app.use(morgan('dev'));
 app.use(express.json({ limit: '10mb' }));
 
 app.get('/health', (req, res) => res.json({ ok: true }));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, swaggerUiOptions));
 app.use('/ingest', ingestRouter);
 app.use('/query', queryRouter);
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`API escuchando en http://localhost:${port}`));
+app.listen(port, () => {
+  console.log(`API escuchando en http://localhost:${port}`);
+  console.log(`Documentación Swagger disponible en http://localhost:${port}/api-docs`);
+});

@@ -19,7 +19,7 @@ export async function ensureCollection(size) {
 
 export async function upsertPoints(vectors, payloads) {
   const points = vectors.map((vec, i) => ({
-    id: Date.now().toString() + '-' + i + '-' + Math.random().toString(36).slice(2),
+    id: crypto.randomUUID(),
     vector: Array.from(vec),
     payload: payloads[i],
   }));

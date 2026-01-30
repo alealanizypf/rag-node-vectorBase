@@ -1,10 +1,10 @@
 
-# RAG Node.js (Gratis) — Qdrant + BGE + Ollama
+# RAG Node.js (Gratis) — Qdrant + BGE + Groq
 
 Implementación base de **RAG 100% gratuita** en Node.js:
 - **Embeddings**: BGE (open‑source) vía [`@xenova/transformers`]
 - **Vector DB**: Qdrant (Docker)
-- **LLM local**: Ollama (por defecto `llama3`)
+- **LLM**: Groq API con modelo Llama
 - **API**: Express
 
 ---
@@ -14,7 +14,7 @@ Implementación base de **RAG 100% gratuita** en Node.js:
 
 ---
 ## Levantar infraestructura
-Usa Docker Compose para levantar Qdrant y Ollama automáticamente:
+Usa Docker Compose para levantar Qdrant:
 
 ```bash
 docker-compose up -d
@@ -22,16 +22,6 @@ docker-compose up -d
 
 Esto iniciará:
 - **Qdrant**: http://localhost:6333
-- **Ollama**: http://localhost:11434
-
-### Descargar modelo en Ollama
-Una vez que el contenedor esté corriendo, descarga el modelo `llama3`:
-
-```bash
-docker exec ollama-llm ollama pull llama3
-```
-
-(Reemplaza `ollama-llm` con el nombre del contenedor si es distinto)
 
 ---
 ## Configuración del proyecto
@@ -42,12 +32,12 @@ cp .env.example .env
 npm install
 ```
 
-Variables clave en `.env` (se usan las URLs internas de Docker Compose):
+Variables clave en `.env`:
 - `QDRANT_URL` (por defecto `http://qdrant:6333` o `http://localhost:6333`)
 - `QDRANT_COLLECTION` (por defecto `documentos`)
 - `EMBEDDING_MODEL` (por defecto `Xenova/bge-small-en-v1.5`)
-- `OLLAMA_HOST` (por defecto `http://ollama:11434` o `http://localhost:11434`)
-- `OLLAMA_MODEL` (por defecto `llama3`)
+- `GROQ_API_KEY` (requerida, obtén en https://console.groq.com/)
+- `GROQ_MODEL` (por defecto `llama3-8b-8192`)
 - `CHUNK_SIZE` / `CHUNK_OVERLAP` para trocear texto
 
 ---
@@ -88,6 +78,7 @@ La API incluye documentación interactiva con Swagger UI:
 ## Notas
 - Si usas un modelo BGE distinto, el script `init` detecta la dimensión automáticamente.
 - Transformers.js descargará el modelo la primera vez y lo cacheará en `~/.cache/transformers`.
+- Groq ofrece uso gratuito con límites de velocidad. Obtén tu API key en https://console.groq.com/
 - Si prefieres otra base vectorial, la interfaz de embeddings y chunking es independiente.
 
 ---
